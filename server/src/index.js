@@ -8,9 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // lets the server read JSON sent from React
 
+const authRoutes = require("./routes/authRoutes");
+app.use("/api/auth", authRoutes);
+
 // Simple test route to check if the server is alive
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", message: "Reddit clone API is running" });
+  res.json({ status: "ok", message: "CREDDIT API is running" });
 });
 
 const PORT = process.env.PORT || 5000;

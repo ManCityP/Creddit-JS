@@ -1,122 +1,183 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-function App() {
-  const [count, setCount] = useState(0)
+const API_URL = "http://localhost:5000/api/auth";
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function App() {
+  const [mode, setMode] = useState("login"); // "login" or "register"
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    const savedToken = localStorage.getItem("token");
+    if (savedUser && savedToken) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setError("");
+
+    const trimmedEmail = email.trim();
+    const trimmedUsername = username.trim();
+
+    if (!emailRegex.test(trimmedEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (mode === "register") {
+      if (!trimmedUsername) {
+        setError("Username is required.");
+        return;
+      }
+      if (password.length < 8) {
+        setError("Password must be at least 8 characters long.");
+        return;
+      }
+    }
+
+    setLoading(true);
+
+    try {
+      if (mode === "register") {
+        await axios.post(`${API_URL}/register`, {
+          username: trimmedUsername,
+          email: trimmedEmail,
+          password,
+        });
+
+        const loginRes = await axios.post(`${API_URL}/login`, {
+          email: trimmedEmail,
+          password,
+        });
+
+        localStorage.setItem("token", loginRes.data.token);
+        localStorage.setItem("user", JSON.stringify(loginRes.data.user));
+        setUser(loginRes.data.user);
+        setMessage("Account created and logged in!");
+      } else {
+        const res = await axios.post(`${API_URL}/login`, {
+          email: trimmedEmail,
+          password,
+        });
+
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        setUser(res.data.user);
+        setMessage("Logged in successfully!");
+      }
+
+      setPassword("");
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    setMessage("Logged out.");
+    setError("");
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <div style={{ maxWidth: "420px", margin: "40px auto", fontFamily: "sans-serif" }}>
+        <h1>Reddit Clone</h1>
 
-      <div className="ticks"></div>
+        {message && <p style={{ color: "green" }}>{message}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
+        {user ? (
+            <div>
+              <p>
+                Signed in as <strong>{user.username}</strong> ({user.email})
+              </p>
+              <button onClick={handleLogout}>Log Out</button>
+            </div>
+        ) : (
+            <div>
+              <div style={{ marginBottom: "16px" }}>
+                <button
+                    type="button"
+                    onClick={() => {
+                      setMode("login");
+                      setError("");
+                      setMessage("");
+                    }}
+                    disabled={mode === "login"}
                 >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
+                  Login
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                      setMode("register");
+                      setError("");
+                      setMessage("");
+                    }}
+                    disabled={mode === "register"}
+                    style={{ marginLeft: "8px" }}
                 >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+                  Register
+                </button>
+              </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+              <form
+                  onSubmit={handleSubmit}
+                  style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+              >
+                {mode === "register" && (
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                )}
+
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+
+                <input
+                    type="password"
+                    placeholder={
+                      mode === "register" ? "Password (min 8 characters)" : "Password"
+                    }
+                    minLength={mode === "register" ? 8 : undefined}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+
+                <button type="submit" disabled={loading}>
+                  {loading
+                      ? "Please wait..."
+                      : mode === "register"
+                          ? "Create Account"
+                          : "Log In"}
+                </button>
+              </form>
+            </div>
+        )}
+      </div>
+  );
 }
-
-export default App
