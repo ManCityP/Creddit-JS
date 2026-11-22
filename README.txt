@@ -7,7 +7,14 @@ How to run:
     MONGO_URI=mongodb+srv://<db_username>:<db_password>@creddit.2jcodnj.mongodb.net/
     JWT_SECRET={any random string}
 
-  You will find your db_username and db_password in mongodb, ask me if you can't find them.
+  You will find your db_username and db_password in: 
+  -> MongoDB left sidebar 
+  -> database & network access 
+  -> edit (make sure you are editing your db_user not someone else)
+  -> Edit password
+  -> Autogenerate Secure Password (Here you can copy both your db_username and db_password and put them in your .env file)
+  -> Update User
+
   The random string can literally be anything, for cleanliness, run this command in your terminal 
     { node -e "console.log(require('crypto').randomBytes(64).toString('hex'))" }
   It will generate it for you.
