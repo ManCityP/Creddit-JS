@@ -12,7 +12,17 @@ How to run:
     { node -e "console.log(require('crypto').randomBytes(64).toString('hex'))" }
   It will generate it for you.
   
-  3- open a terminal in your server path and run this terminal command {npm run dev}
-  4- open a terminal in your client path and run this terminal command {npm run dev}
+  3- open a terminal in your server path and run the following commands (Note: The install commands are for first time only):
+    npm install express mongoose dotenv cors jsonwebtoken bcryptjs
+    npm install --save-dev nodemon
+
+    npm run dev
+
+  4- open a terminal in your client path and run the following commands (Note: The install commands are for first time only):
+    npm install
+    npm install react-router-dom axios
+
+    npm run dev
+
   5- The client one will give you a localhost url which you can open in any browser.
   
