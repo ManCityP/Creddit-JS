@@ -2,6 +2,7 @@ import './App.css'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register'
 import Home from './pages/Home'
+import Navbar from './components/Navbar.jsx'
 import { Routes, Route } from 'react-router-dom'
 
 function App() {
@@ -9,11 +10,11 @@ function App() {
 
   return (
     <>
-        <h1>Welcome</h1>
+        <Navbar />
         <Routes>
-            <Route path="/" component={<Home />} />
-            <Route path="/login" component={<Login />} />
-            <Route path="/register" component={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
         </Routes>
     </>
   )
