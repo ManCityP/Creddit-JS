@@ -79,6 +79,11 @@ function Navbar() {
                             Log in
                         </Link>
 
+                        <Link to="/create-community" className="create-btn">
+                            <span className="create-btn-plus">+</span>
+                            <span className="create-btn-text">Create community</span>
+                        </Link>
+
                         <Link to="/register" className="signup-btn">
                             Sign up
                         </Link>
