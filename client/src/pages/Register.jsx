@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Register.css";
+
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{8,}$/;
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,20}$/;
@@ -97,4 +98,4 @@ function Register() {
     )
 }
 
-export default Register
+export default Register;

@@ -25,9 +25,9 @@ app.get("/api/test", (req, res) => {
 app.get("/api/test/create-user", async (req, res) => {
     try {
         const user = await User.create({
-            username: "TestUser",
-            email: "test@example.com",
-            passwordHash: await bcrypt.hash("Test1234", 12),
+            username: "FuckingMohamedAshraf",
+            email: "FuckingMohamedAshraf@gmail.com",
+            passwordHash: await bcrypt.hash("FuckingMohamedAshraf", 233),
             bio: "This is a test account"
         });
 
