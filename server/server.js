@@ -1,5 +1,9 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -10,12 +14,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/test", (req, res) => {
-    res.send("{\n" +
-        "    \"success\": true,\n" +
-        "    \"message\": \"Hello from Creddit\"\n" +
-        "}");
+    res.json({
+        success: true,
+        message: "Hello from Creddit"
+    });
 });
 
-app.listen(5000, () => {
+
+await connectDB();
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
     console.log("Server running on port 5000");
 });
