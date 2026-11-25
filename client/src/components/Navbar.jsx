@@ -16,6 +16,12 @@ function Navbar(){
                 <Link to="/register" className="signup-btn">
                     Sign up
                 </Link>
+
+                <Link to="/create-community" className="create-btn">
+                    <span className="create-btn-plus">+</span>
+                    <span className="create-btn-text">Create community</span>
+                </Link>
+
             </div>
         </nav>
     )
