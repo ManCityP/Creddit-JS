@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
-function Navegator(){
+function Navbar(){
     return(
         <nav className="navbar">
             <Link to="/" className="navbar-logo">
-                <img src="./reddit.png" alt="Creddit" />
+                <img src="/reddit.png" alt="Creddit" />
                 <span>Creddit</span>
             </Link>
 
@@ -21,4 +21,4 @@ function Navegator(){
     )
 }
 
-export default Navegator;
+export default Navbar;
