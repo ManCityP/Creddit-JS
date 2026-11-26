@@ -6,18 +6,12 @@ import User from "./models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import communityRoutes from "./routes/communityRoutes.js";
-
 import path from "path";
 import { fileURLToPath } from "url";
 import Auth from "./helpers/Auth.js";
 import Upload from "./helpers/upload.js";
 import Post from "./models/Post.js";
 
-import path from "path";
-import { fileURLToPath } from "url";
-import Auth from "./helpers/Auth.js";
-import Upload from "./helpers/upload.js";
-import Post from "./models/Post.js";
 
 dotenv.config();
 
