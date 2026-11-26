@@ -70,78 +70,6 @@
   background-color: var(--primary-hover);
 }
 
-
-/* Logged-in user menu */
-.user-menu {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.user-menu-btn {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  border-radius: 25px;
-  background-color: var(--input-bg);
-  color: var(--text);
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.user-menu-btn:hover {
-  background-color: var(--border);
-}
-
-.user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--primary);
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-}
-
-/* User dropdown */
-.user-dropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 140px;
-  padding: 6px;
-  background-color: var(--navbar);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 200;
-}
-
-.user-dropdown button {
-  width: 100%;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--text);
-  font-size: 14px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.user-dropdown button:hover {
-  background-color: var(--input-bg);
-}
-
-
 @media (max-width: 500px) {
   .navbar {
     padding: 10px 12px;
@@ -165,16 +93,46 @@
   .signup-btn {
     padding: 9px 12px;
   }
+    .user-menu-btn {
+        gap: 6px;
+        padding: 4px 7px;
+        font-size: 12px;
+    }
 
-  .user-menu-btn {
-    gap: 6px;
-    padding: 4px 7px;
-    font-size: 12px;
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+    }
+}
+
+.create-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text);
+  transition: 0.2s;
+}
+
+.create-btn:hover {
+  background-color: var(--input-bg);
+}
+
+.create-btn-plus {
+  font-size: 20px;
+  line-height: 14px;
+}
+
+@media (max-width: 500px) {
+  .create-btn {
+    padding: 9px 10px;
   }
 
-  .user-avatar {
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
+  .create-btn-text {
+    display: none;
   }
 }
