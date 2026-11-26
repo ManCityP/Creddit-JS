@@ -24,6 +24,8 @@ function Login() {
             }
             const data = await loginUser(email, password);
 
+            localStorage.setItem("token", data.token);
+
             window.alert("Login successful! Welcome " + data.user.username);
 
             resetForm();

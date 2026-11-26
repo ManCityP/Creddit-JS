@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import communityRoutes from "./routes/communityRoutes.js";
 
 dotenv.config();
@@ -89,10 +90,18 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
+        // Login token: the browser sends it back with every request,  so the server knows who is logged in (see middleware/auth.js)
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
         // if password is correct then Login successful
         res.status(200).json({
             success: true,
             message: "Login successful",
+            token,
             user: {
                 id: user._id,
                 username: user.username,
