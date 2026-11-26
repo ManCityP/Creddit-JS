@@ -13,6 +13,12 @@ import Auth from "./helpers/Auth.js";
 import Upload from "./helpers/upload.js";
 import Post from "./models/Post.js";
 
+import path from "path";
+import { fileURLToPath } from "url";
+import Auth from "./helpers/Auth.js";
+import Upload from "./helpers/upload.js";
+import Post from "./models/Post.js";
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
