@@ -21,7 +21,7 @@ const checkResponse = async (response) => {
 
     // DELETE returns status 204, which has no response body.
     if (response.status === 204) {
-        return null;
+        return null; //todo need to return a success message
     }
 
     return response.json();
