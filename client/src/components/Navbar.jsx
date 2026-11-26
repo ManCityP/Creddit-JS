@@ -9,6 +9,10 @@ function Navbar(){
             </Link>
 
             <div className="navbar-actions">
+                <Link to="/CreatePost" className="signup-btn">
+                    Create Post
+                </Link>
+
                 <Link to="/login" className="login-btn">
                     Log in
                 </Link>

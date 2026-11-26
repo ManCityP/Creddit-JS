@@ -7,11 +7,35 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import communityRoutes from "./routes/communityRoutes.js";
 
+import path from "path";
+import { fileURLToPath } from "url";
+import Auth from "./helpers/Auth.js";
+import Upload from "./helpers/upload.js";
+import Post from "./models/Post.js";
+
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
+function resolveMediaType(mimeType = "") {
+    if (mimeType.startsWith("image/")) return "image";
+    if (mimeType.startsWith("video/")) return "video";
+    if (mimeType.startsWith("audio/")) return "audio";
+    if (mimeType.startsWith("application/") || mimeType.startsWith("text/")) {
+        return "file";
+    }
+    return "other";
+}
+
 
 app.get("/", (req, res) => {
     res.send("Creddit Backend is running");
