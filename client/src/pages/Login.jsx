@@ -26,9 +26,6 @@ function Login() {
             }
 
             const data = await loginUser(email, password);
-
-            window.alert("Login successful! Welcome " + data.user.username);
-
             resetForm();
             navigate("/");
         } catch (error) {

@@ -10,6 +10,8 @@ import { fileURLToPath } from "url";
 import Auth from "./helpers/Auth.js";
 import Upload from "./helpers/upload.js";
 import Post from "./models/Post.js";
+import Session from "./models/Session.js";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -23,6 +25,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use((err, _req, res, next) => {
+    if (err && err.name === "MulterError") {
+        return res.status(400).json({ message: err.message });
+    }
+    if (err && err.message === "Unsupported file type") {
+        return res.status(400).json({ message: err.message });
+    }
+    next(err);
+});
 
 function resolveMediaType(mimeType = "") {
     if (mimeType.startsWith("image/")) return "image";
@@ -111,22 +122,13 @@ app.post("/api/post/create", Auth, Upload.array("media", 20), async (req, res) =
     }
 })
 
-app.use((err, _req, res, next) => {
-    if (err && err.name === "MulterError") {
-        return res.status(400).json({ message: err.message });
-    }
-    if (err && err.message === "Unsupported file type") {
-        return res.status(400).json({ message: err.message });
-    }
-    next(err);
-});
+
 
 
 app.post("/api/auth/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Check that all fields are provided(no need for it as it was handled in frontend "login.jsx")
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -134,12 +136,10 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // Find the user using their email
         const user = await User.findOne({
             email: email.trim().toLowerCase()
         }).select("+passwordHash");
 
-        // Check if that user email even exists or not
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -147,13 +147,11 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // if email found Compare the entered password with the stored hash
         const isPasswordCorrect = await bcrypt.compare(
             password,
             user.passwordHash
         );
 
-        // Check if the password is incorrect
         if (!isPasswordCorrect) {
             return res.status(401).json({
                 success: false,
@@ -161,21 +159,40 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // if password is correct then Login successful
-        res.status(200).json({
+        // Create a new session with a 60-minute inactivity timeout.
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+        const session = await Session.create({
+            userId: user._id,
+            lastActivityAt: new Date(),
+            expiresAt
+        });
+
+        // Generate a token linked to this specific session.
+        const token = jwt.sign(
+            {
+                userId: user._id.toString(),
+                sessionId: session._id.toString()
+            },
+            process.env.JWT_SECRET
+        );
+
+        return res.status(200).json({
             success: true,
             message: "Login successful",
+            token,
             user: {
-                id: user._id,
+               id: user._id,
                 username: user.username,
-                email: user.email
+                email: user.email,
+                avatar: user.avatar,
             }
         });
 
-    } catch (error) { // catch if the server itself fails or raise an error when trying to login
+    } catch (error) {
         console.error("Login error:", error);
 
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Server error during login"
         });
@@ -249,6 +266,28 @@ app.post("/api/auth/register", async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Server error during registration"
+        });
+    }
+});
+
+
+
+
+app.post("/api/auth/logout", Auth, async (req, res) => {
+    try {
+        await Session.findByIdAndDelete(req.sessionId);
+
+        return res.status(200).json({
+            success: true,
+            message: "Logout successful"
+        });
+
+    } catch (error) {
+        console.error("Logout error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Server error during logout"
         });
     }
 });
