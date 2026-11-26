@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:5000';
+export const SERVER_URL = 'http://localhost:5000';
 
 // A small helper to check the response and show useful server errors.
 const checkResponse = async (response) => {
