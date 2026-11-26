@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
+import communityRoutes from "./routes/communityRoutes.js";
 
 dotenv.config();
 
@@ -44,6 +45,8 @@ app.get("/api/test/create-user", async (req, res) => {
         });
     }
 });
+
+app.use("/api/communities", communityRoutes);
 
 
 await connectDB();
