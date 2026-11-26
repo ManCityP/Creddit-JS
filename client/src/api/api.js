@@ -51,3 +51,11 @@ export const registerUser = async (username, email, password) => {
 
     return checkResponse(response);
 };
+export const createPost = async (formData) => {
+    const response = await fetch(`${SERVER_URL}/api/post/create`, {
+        method: 'POST',
+        body: formData
+    });
+
+    return checkResponse(response);
+}
