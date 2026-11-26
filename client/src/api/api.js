@@ -38,3 +38,16 @@ export const loginUser = async (email, password) => {
 
     return checkResponse(response);
 };
+
+// Register API
+export const registerUser = async (username, email, password) => {
+    const response = await fetch(`${SERVER_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password })
+    });
+
+    return checkResponse(response);
+};

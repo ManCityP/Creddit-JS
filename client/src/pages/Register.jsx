@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
+import { registerUser } from "../api/api";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S{8,}$/;
@@ -10,7 +12,7 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    const navigate = useNavigate()
 
     function resetForm() {
         setUsername("");
@@ -19,7 +21,7 @@ function Register() {
         setConfirmPassword("");
     }
 
-    function handleSubmit(e) { //todo check non-existing in db already
+    async function handleSubmit(e) { //todo check non-existing in db already
         e.preventDefault();
 
         if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -28,7 +30,7 @@ function Register() {
         }
 
         if(!USERNAME_REGEX.test(username.trim())) {
-            window.alert("Invalid username");
+            window.alert("Username must be 3-20 characters and contain only letters, numbers or underscores");
             return;
         }
 
@@ -38,7 +40,7 @@ function Register() {
         }
 
         if(!PASSWORD_REGEX.test(password.trim())) {
-            window.alert("Invalid password");
+            window.alert("Password must contain at least 8 characters, one uppercase letter, one lowercase letter and one number");
             return;
         }
 
@@ -46,6 +48,22 @@ function Register() {
             window.alert("Passwords do not match");
             return;
         }
+
+        try {
+            const data = await registerUser(
+                username.trim(),
+                email.trim().toLowerCase(),
+                password
+            );
+
+            window.alert(data.message);
+
+            resetForm();
+            navigate("/login");
+
+        } catch (error) {
+            window.alert(error.message);
+        }        
 
         window.alert("Registered Successfully");
         resetForm();
@@ -94,8 +112,12 @@ function Register() {
 
                 <button type="submit">Register</button>
             </form>
+
+            <p>
+                Already have an account? <Link to="/login">Login</Link>
+            </p>
         </div>
-    )
+    );
 }
 
 export default Register;

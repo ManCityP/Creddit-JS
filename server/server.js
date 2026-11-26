@@ -108,6 +108,78 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 
+
+app.post("/api/auth/register", async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+
+        const cleanUsername = username.trim();
+        const cleanEmail = email.trim().toLowerCase();
+
+        // Check if username or email already exists
+        const existingUser = await User.findOne({
+            $or: [
+                { username: cleanUsername },
+                { email: cleanEmail }
+            ]
+        });
+
+        if (existingUser) {
+            if (existingUser.username === cleanUsername) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Username already exists"
+                });
+            }
+
+            return res.status(409).json({
+                success: false,
+                message: "Email already exists"
+            });
+        }
+
+        // Hash the password
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        // Create the new user
+        const user = await User.create({
+            username: cleanUsername,
+            email: cleanEmail,
+            passwordHash
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Registration successful",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        console.error("Registration error:", error);
+
+        // Handle duplicate entries
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern)[0];
+
+            return res.status(409).json({
+                success: false,
+                message: `${field} already exists`
+            });
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Server error during registration"
+        });
+    }
+});
+
+
+
 await connectDB();
 const PORT = process.env.PORT || 5000;
 
