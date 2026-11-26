@@ -4,7 +4,7 @@ function Navbar(){
     return(
         <nav className="navbar">
             <Link to="/" className="navbar-logo">
-                <img src="/reddit.png" alt="Creddit" />
+                <img src="/frisset.jpg" alt="Creddit" />
                 <span>Creddit</span>
             </Link>
 
