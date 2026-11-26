@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import "./Login.css";
+import {loginUser} from '../api/api';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate= useNavigate()
 
 
     function resetForm() {
@@ -12,18 +14,26 @@ function Login() {
         setPassword("");
     }
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    async function handleSubmit(e) {
+        try {
+            e.preventDefault();
 
-        if (!email.trim() || !password.trim()) {
-            window.alert("Please fill all fields");
-            return;
+            if (!email.trim() || !password.trim()) {
+                window.alert("Please fill all fields");
+                return;
+            }
+            const data = await loginUser(email, password);
+
+            localStorage.setItem("token", data.token);
+
+            window.alert("Login successful! Welcome " + data.user.username);
+
+            resetForm();
+            navigate("/");
+        } catch (error) {
+            window.alert(error.message);
         }
 
-        //todo check if existing in db
-
-        window.alert("Registered Successfully");
-        resetForm();
     }
 
     return (

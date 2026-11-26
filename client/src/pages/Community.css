@@ -1,0 +1,218 @@
+.community-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 12px 24px 40px;
+    color: var(--text);
+    text-align: left;
+}
+
+.community-banner {
+    height: 128px;
+    border-radius: 10px;
+    background: linear-gradient(120deg, #33a8ff 0%, #0045ac 100%);
+}
+
+.community-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    margin: -40px 0 28px;
+    padding: 0 16px;
+}
+
+.community-icon {
+    flex: 0 0 auto;
+    width: 88px;
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid var(--background);
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.community-header h1 {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding-bottom: 6px;
+    font-size: 32px;
+    overflow-wrap: anywhere;
+}
+
+.community-actions {
+    flex: 0 0 auto;
+    padding-bottom: 8px;
+}
+
+.community-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.community-posts {
+    flex: 1;
+    min-width: 0;
+}
+
+.community-empty {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.community-empty h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.community-empty p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+/* "About" card on the right */
+.community-sidebar {
+    flex: 0 0 316px;
+    padding: 16px;
+    background-color: var(--surface);
+    border-radius: 16px;
+    position: sticky;
+    top: 90px;
+}
+
+.community-sidebar h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+
+.community-description {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.community-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.community-stats {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.community-stats strong {
+    font-size: 16px;
+}
+
+.community-stats span {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.community-sidebar hr {
+    margin: 16px 0;
+    border: none;
+    border-top: 1px solid var(--border);
+}
+
+.community-sidebar h3 {
+    margin: 0 0 10px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+.community-moderator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.community-moderator-avatar {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--input-bg);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* Loading, not found and error messages */
+.community-message {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 0 20px;
+    text-align: center;
+    color: var(--text);
+}
+
+.community-message h2 {
+    margin: 0 0 10px;
+    font-size: 22px;
+}
+
+.community-message p {
+    margin: 0 0 24px;
+    color: var(--text-secondary);
+}
+
+.community-message-btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: var(--primary);
+    transition: 0.2s;
+}
+
+.community-message-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+@media (max-width: 900px) {
+    .community-body {
+        flex-direction: column-reverse;
+    }
+
+    .community-sidebar {
+        position: static;
+        width: 100%;
+        flex-basis: auto;
+    }
+}
+
+@media (max-width: 500px) {
+    .community-page {
+        padding: 10px 12px 30px;
+    }
+
+    .community-icon {
+        width: 64px;
+        height: 64px;
+        font-size: 24px;
+    }
+
+    .community-header h1 {
+        font-size: 22px;
+    }
+}
