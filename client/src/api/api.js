@@ -14,7 +14,9 @@ const checkResponse = async (response) => {
             // The response may not contain JSON.
         }
 
-        throw new Error(message);
+        const error = new Error(message);
+        error.status = response.status; 
+        throw error;
     }
 
     // DELETE returns status 204, which has no response body.
@@ -46,4 +48,55 @@ export const createPost = async (formData) => {
     });
 
     return checkResponse(response);
-}
+};
+
+
+
+// The login token saved by Login.jsx
+export const isLoggedIn = () => Boolean(localStorage.getItem('token'));
+
+const authHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+
+
+export const createCommunity = async (name, description) => {
+    const response = await fetch(`${SERVER_URL}/api/communities`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            ...authHeaders()
+        },
+        body: JSON.stringify({ name, description })
+    });
+
+    return checkResponse(response);
+};
+
+export const getCommunity = async (name) => {
+    const response = await fetch(`${SERVER_URL}/api/communities/${encodeURIComponent(name)}`, {
+        headers: authHeaders()
+    });
+
+    return checkResponse(response);
+};
+
+export const joinCommunity = async (name) => {
+    const response = await fetch(`${SERVER_URL}/api/communities/${encodeURIComponent(name)}/join`, {
+        method: 'POST',
+        headers: authHeaders()
+    });
+
+    return checkResponse(response);
+};
+
+export const leaveCommunity = async (name) => {
+    const response = await fetch(`${SERVER_URL}/api/communities/${encodeURIComponent(name)}/leave`, {
+        method: 'POST',
+        headers: authHeaders()
+    });
+
+    return checkResponse(response);
+};

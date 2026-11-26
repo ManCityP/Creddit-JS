@@ -44,6 +44,11 @@
     overflow-wrap: anywhere;
 }
 
+.community-actions {
+    flex: 0 0 auto;
+    padding-bottom: 8px;
+}
+
 .community-body {
     display: flex;
     align-items: flex-start;

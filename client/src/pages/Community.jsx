@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getCommunity } from "../api/communityApi";
+import { getCommunity } from "../api/api";
+import JoinButton from "../components/JoinButton";
 import "./Community.css";
 
 function formatDate(value) {
@@ -41,6 +42,8 @@ function Community() {
 
 function CommunityView({ name }) {
     const [community, setCommunity] = useState(null);
+    const [isMember, setIsMember] = useState(false);
+    const [isModerator, setIsModerator] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const [error, setError] = useState("");
 
@@ -49,7 +52,10 @@ function CommunityView({ name }) {
 
         getCommunity(name)
             .then((data) => {
-                if (!ignore) setCommunity(data.community);
+                if (ignore) return;
+                setCommunity(data.community);
+                setIsMember(data.isMember);
+                setIsModerator(data.isModerator);
             })
             .catch((err) => {
                 if (ignore) return;
@@ -96,6 +102,11 @@ function CommunityView({ name }) {
 
     const memberLabel = community.memberCount === 1 ? "Member" : "Members";
 
+    function handleMembershipChange(result) {
+        setIsMember(result.isMember);
+        setCommunity({ ...community, memberCount: result.memberCount });
+    }
+
     return (
         <div className="community-page">
             <div className="community-banner" />
@@ -103,7 +114,14 @@ function CommunityView({ name }) {
             <div className="community-header">
                 <div className="community-icon">r/</div>
                 <h1>r/{community.name}</h1>
-                {/* The Join / Leave button will go here (next feature) */}
+                <div className="community-actions">
+                    <JoinButton
+                        communityName={community.name}
+                        isMember={isMember}
+                        isModerator={isModerator}
+                        onChange={handleMembershipChange}
+                    />
+                </div>
             </div>
 
             <div className="community-body">

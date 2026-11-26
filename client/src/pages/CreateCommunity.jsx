@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { createCommunity, isLoggedIn } from "../api/communityApi";
+import { createCommunity, isLoggedIn } from "../api/api";
 import "./CreateCommunity.css";
 
 const COMMUNITY_NAME_REGEX = /^[a-zA-Z0-9_]{3,21}$/;
