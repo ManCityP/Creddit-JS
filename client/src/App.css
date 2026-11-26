@@ -177,4 +177,33 @@
     height: 30px;
     font-size: 13px;
   }
+  .create-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text);
+    transition: 0.2s;
+  }
+
+  .create-btn:hover {
+    background-color: var(--input-bg);
+  }
+
+  .create-btn-plus {
+    font-size: 20px;
+    line-height: 14px;
+  }
+
+
+  .create-btn {
+    padding: 9px 10px;
+  }
+
+  .create-btn-text {
+    display: none;
+  }
 }
