@@ -6,18 +6,12 @@ import User from "./models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import communityRoutes from "./routes/communityRoutes.js";
-
 import path from "path";
 import { fileURLToPath } from "url";
 import Auth from "./helpers/Auth.js";
 import Upload from "./helpers/upload.js";
 import Post from "./models/Post.js";
 
-import path from "path";
-import { fileURLToPath } from "url";
-import Auth from "./helpers/Auth.js";
-import Upload from "./helpers/upload.js";
-import Post from "./models/Post.js";
 
 dotenv.config();
 
@@ -27,10 +21,19 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/communities", communityRoutes);
 
+app.use((err, _req, res, next) => {
+    if (err && err.name === "MulterError") {
+        return res.status(400).json({ message: err.message });
+    }
+    if (err && err.message === "Unsupported file type") {
+        return res.status(400).json({ message: err.message });
+    }
+    next(err);
+});
 
 function resolveMediaType(mimeType = "") {
     if (mimeType.startsWith("image/")) return "image";
@@ -77,7 +80,7 @@ app.get("/api/test/create-user", async (req, res) => {
     }
 });
 
-app.use("/api/communities", communityRoutes);
+
 
 
 
@@ -192,15 +195,6 @@ app.post("/api/post/create", Auth, Upload.array("media", 20), async (req, res) =
     }
 })
 
-app.use((err, _req, res, next) => {
-    if (err && err.name === "MulterError") {
-        return res.status(400).json({ message: err.message });
-    }
-    if (err && err.message === "Unsupported file type") {
-        return res.status(400).json({ message: err.message });
-    }
-    next(err);
-});
 
 
 await connectDB();
