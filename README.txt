@@ -7,18 +7,31 @@ How to run:
     MONGO_URI=mongodb+srv://<db_username>:<db_password>@creddit.2jcodnj.mongodb.net/
     JWT_SECRET={any random string}
 
+<<<<<<< HEAD
   You will find your db_username and db_password in: 
   -> MongoDB left sidebar 
   -> database & network access 
+=======
+  You will find your db_username and db_password in:
+  -> MongoDB left sidebar
+  -> database & network access
+>>>>>>> f6770c1ec25b3abaa7123bef33f12043b1535f92
   -> edit (make sure you are editing your db_user not someone else)
   -> Edit password
   -> Autogenerate Secure Password (Here you can copy both your db_username and db_password and put them in your .env file)
   -> Update User
 
+<<<<<<< HEAD
   The random string can literally be anything, for cleanliness, run this command in your terminal 
     { node -e "console.log(require('crypto').randomBytes(64).toString('hex'))" }
   It will generate it for you.
   
+=======
+  The random string can literally be anything, for cleanliness, run this command in your terminal
+    { node -e "console.log(require('crypto').randomBytes(64).toString('hex'))" }
+  It will generate it for you.
+
+>>>>>>> f6770c1ec25b3abaa7123bef33f12043b1535f92
   3- open a terminal in your server path and run the following commands (Note: The install commands are for first time only):
     npm install express mongoose dotenv cors jsonwebtoken bcryptjs
     npm install --save-dev nodemon
@@ -32,4 +45,7 @@ How to run:
     npm run dev
 
   5- The client one will give you a localhost url which you can open in any browser.
+<<<<<<< HEAD
   
+=======
+>>>>>>> f6770c1ec25b3abaa7123bef33f12043b1535f92

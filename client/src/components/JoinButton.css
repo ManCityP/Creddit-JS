@@ -1,0 +1,59 @@
+.join-btn {
+    min-width: 80px;
+    height: 36px;
+    padding: 0 18px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #115bca;
+    border: 1px solid #115bca;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.join-btn:hover:not(:disabled) {
+    background-color: #1a6ad8;
+    border-color: #1a6ad8;
+}
+
+.join-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.join-btn.joined {
+    color: var(--text);
+    background-color: transparent;
+    border-color: var(--text-secondary);
+}
+
+.join-btn.joined:hover:not(:disabled) {
+    background-color: transparent;
+    border-color: var(--text);
+}
+
+.join-btn .join-btn-leave {
+    display: none;
+}
+
+.join-btn.joined:hover .join-btn-joined {
+    display: none;
+}
+
+.join-btn.joined:hover .join-btn-leave {
+    display: inline;
+}
+
+.moderator-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text);
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 25px;
+}
