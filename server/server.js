@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
-
+import communityRoutes from "./routes/communityRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import Auth from "./helpers/Auth.js";
@@ -12,6 +12,7 @@ import Upload from "./helpers/upload.js";
 import Post from "./models/Post.js";
 import Session from "./models/Session.js";
 import jwt from "jsonwebtoken";
+
 
 dotenv.config();
 
