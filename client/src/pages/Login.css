@@ -83,3 +83,28 @@
 .login-container a:hover {
     text-decoration: underline;
 }
+
+/* Password input with eye icon */
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-container .password-field input {
+    padding-right: 45px;
+}
+
+.password-eye {
+    position: absolute;
+    top: 30%;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.password-eye:hover {
+    color: var(--primary);
+}
