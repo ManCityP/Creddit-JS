@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import communityRoutes from "./routes/communityRoutes.js";
 
 import path from "path";
@@ -27,6 +26,8 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use("/api/communities", communityRoutes);
 
 app.use((err, _req, res, next) => {
     if (err && err.name === "MulterError") {
@@ -58,29 +59,6 @@ app.get("/api/test", (req, res) => {
         success: true,
         message: "Hello from Creddit"
     });
-});
-
-app.get("/api/test/create-user", async (req, res) => {
-    try {
-        const user = await User.create({
-            username: "FuckingMohamedAshraf",
-            email: "FuckingMohamedAshraf@gmail.com",
-            passwordHash: await bcrypt.hash("FuckingMohamedAshraf", 233),
-            bio: "This is a test account"
-        });
-
-        res.status(201).json({
-            success: true,
-            message: "User created successfully",
-            userId: user._id
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
 });
 
 app.post("/api/auth/login", async (req, res) => {
