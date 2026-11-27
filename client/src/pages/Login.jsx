@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import "./Login.css";
-import {loginUser} from '../api/api';
+import { loginUser } from '../api/api';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate= useNavigate()
+    const [showPassword, setShowPassword] = useState(false);
 
+    const navigate = useNavigate();
 
     function resetForm() {
         setEmail("");
@@ -22,18 +24,13 @@ function Login() {
                 window.alert("Please fill all fields");
                 return;
             }
+
             const data = await loginUser(email, password);
-
-            localStorage.setItem("token", data.token);
-
-            window.alert("Login successful! Welcome " + data.user.username);
-
             resetForm();
             navigate("/");
         } catch (error) {
             window.alert(error.message);
         }
-
     }
 
     return (
@@ -52,11 +49,29 @@ function Login() {
 
                 <div>
                     <label>Password</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+
+                    <div className="password-field">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <span
+                            className="password-eye"
+                            onClick={() => setShowPassword(!showPassword)}
+                            role="button"
+                            tabIndex={0}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                    setShowPassword(!showPassword);
+                                }
+                            }}
+                        >
+                            {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                        </span>
+                    </div>
                 </div>
 
                 <button type="submit">Login</button>
@@ -66,7 +81,7 @@ function Login() {
                 Don't have an account? <Link to="/register">Register</Link>
             </p>
         </div>
-    )
+    );
 }
 
 export default Login;

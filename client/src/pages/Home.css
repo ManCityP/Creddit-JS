@@ -1,0 +1,351 @@
+
+/* Main Home Page */
+
+.home-page {
+    width: 100%;
+    overflow: hidden;
+}
+
+
+/* Hero Section */
+
+.home-page .hero-section {
+    min-height: 580px;
+    padding: 70px 10%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+
+    background:
+        radial-gradient(
+            circle at 80% 50%,
+            rgba(255, 69, 0, 0.12),
+            transparent 35%
+        ),
+        var(--background);
+}
+
+.home-page .hero-content {
+    max-width: 570px;
+}
+
+.home-page .hero-tag {
+    display: inline-block;
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.home-page .hero-content h1 {
+    font-size: clamp(38px, 5vw, 62px);
+    line-height: 1.15;
+    margin: 0 0 25px;
+}
+
+.home-page .hero-content h1 span {
+    color: var(--primary);
+}
+
+.home-page .hero-content p {
+    color: var(--text-secondary);
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: 30px;
+}
+
+.home-page .hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.home-page .get-started-btn {
+    display: inline-block;
+    padding: 14px 28px;
+
+    background-color: var(--primary);
+    color: white;
+
+    border-radius: 25px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.home-page .get-started-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+.home-page .explore-btn {
+    color: var(--text);
+    padding: 14px 10px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.home-page .explore-btn:hover {
+    color: var(--primary);
+}
+
+
+/* Hero Visual */
+
+.home-page .hero-visual {
+    position: relative;
+    width: 420px;
+    height: 380px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-page .visual-circle {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+
+    background: linear-gradient(145deg, #292929, #171717);
+    border: 1px solid #454545;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 0 80px rgba(255, 69, 0, 0.15);
+}
+
+.home-page .visual-circle img {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+}
+
+.home-page .floating-card {
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 18px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.home-page .floating-card > span {
+    font-size: 28px;
+}
+
+.home-page .floating-card div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.home-page .floating-card strong {
+    font-size: 14px;
+}
+
+.home-page .floating-card small {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+.home-page .card-one {
+    top: 25px;
+    right: 0;
+}
+
+.home-page .card-two {
+    bottom: 35px;
+    left: -10px;
+}
+
+.home-page .card-three {
+    bottom: 5px;
+    right: 5px;
+}
+
+
+/* Communities Section */
+
+.home-page .communities-section {
+    padding: 80px 10%;
+
+    background-color: var(--navbar);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.home-page .section-heading {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.home-page .section-heading > span {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.home-page .section-heading h2 {
+    font-size: 32px;
+    margin: 15px 0;
+}
+
+.home-page .section-heading p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.home-page .community-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.home-page .community-card {
+    padding: 28px 22px;
+
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    transition: 0.25s;
+}
+
+.home-page .community-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+}
+
+.home-page .community-icon {
+    font-size: 35px;
+}
+
+.home-page .community-card h3 {
+    font-size: 18px;
+    margin: 18px 0 10px;
+}
+
+.home-page .community-card p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+
+/* Join Section */
+
+.home-page .join-section {
+    padding: 80px 20px;
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 69, 0, 0.12),
+            transparent 65%
+        ),
+        var(--background);
+}
+
+.home-page .join-section h2 {
+    font-size: 32px;
+    margin: 0 0 15px;
+}
+
+.home-page .join-section p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 1000px) {
+
+    .home-page .hero-section {
+        padding: 60px 6%;
+        gap: 20px;
+    }
+
+    .home-page .hero-visual {
+        width: 350px;
+        transform: scale(0.9);
+    }
+
+    .home-page .community-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .home-page .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 65px 6%;
+    }
+
+    .home-page .hero-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .home-page .hero-buttons {
+        justify-content: center;
+    }
+
+    .home-page .hero-visual {
+        max-width: 100%;
+        transform: scale(0.85);
+        margin-top: 10px;
+    }
+
+    .home-page .communities-section {
+        padding: 60px 6%;
+    }
+
+    .home-page .section-heading h2 {
+        font-size: 26px;
+    }
+
+}
+
+@media (max-width: 450px) {
+
+    .home-page .community-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-page .hero-content h1 {
+        font-size: 38px;
+    }
+
+    .home-page .hero-visual {
+        transform: scale(0.75);
+        margin: -20px 0;
+    }
+
+    .home-page .join-section h2 {
+        font-size: 26px;
+    }
+
+}
