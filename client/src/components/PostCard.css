@@ -1,0 +1,444 @@
+.post-card {
+    display: flex;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    text-align: left;
+}
+
+.post-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.post-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.post-vote-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 10px;
+    background-color: var(--input-bg);
+    border-right: 1px solid var(--border);
+    min-width: 52px;
+    user-select: none;
+}
+
+.vote-btn {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.vote-btn:hover:not(:disabled) {
+    background-color: var(--surface);
+    color: var(--text);
+}
+
+.vote-btn.upvote.active {
+    color: var(--primary);
+    background-color: rgba(255, 69, 0, 0.14);
+}
+
+.vote-btn.downvote.active {
+    color: #7193ff;
+    background-color: rgba(113, 147, 255, 0.14);
+}
+
+.vote-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.vote-count.up {
+    color: var(--primary);
+}
+
+.vote-count.down {
+    color: #7193ff;
+}
+
+.post-card-body {
+    flex: 1;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.post-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.post-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.post-community {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.post-community.general {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.post-author,
+.post-time {
+    color: var(--text-secondary);
+}
+
+.post-join-wrap {
+    flex-shrink: 0;
+}
+
+.post-card-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--text);
+    word-break: break-word;
+}
+
+.post-card-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: pre-line;
+}
+
+.post-media-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Fixed height prevents layout jumps when switching between items of different dimensions */
+.post-media-preview {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.post-media-preview.expandable {
+    cursor: zoom-in;
+}
+
+.post-image,
+.post-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #000;
+    display: block;
+}
+
+.post-audio-box,
+.post-file-box,
+.post-media-fallback {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.post-audio {
+    width: 100%;
+    max-width: 460px;
+}
+
+.post-file-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.post-file-link:hover {
+    text-decoration: underline;
+}
+
+.expand-media-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    font-size: 15px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.expand-media-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background-color: rgba(0, 0, 0, 0.68);
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    z-index: 2;
+}
+
+.carousel-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.88);
+}
+
+.carousel-arrow.prev {
+    left: 10px;
+}
+
+.carousel-arrow.next {
+    right: 10px;
+}
+
+.media-count-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    z-index: 2;
+}
+
+.carousel-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--border);
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.15s;
+}
+
+.carousel-dot.active {
+    background-color: var(--primary);
+    transform: scale(1.2);
+}
+
+.post-file-pill {
+    align-self: flex-start;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 999px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.post-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.post-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background-color: var(--input-bg);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.post-action-btn:hover {
+    color: var(--text);
+    border-color: var(--border);
+}
+
+/* Reddit-style expanded overlay (above page without browser fullscreen) */
+.media-lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.86);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.media-lightbox-panel {
+    width: 100%;
+    max-width: 1100px;
+    max-height: 92vh;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}
+
+.media-lightbox-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: var(--input-bg);
+    border-bottom: 1px solid var(--border);
+}
+
+.media-lightbox-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lightbox-close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.lightbox-close-btn:hover {
+    border-color: var(--primary);
+}
+
+.media-lightbox-stage {
+    position: relative;
+    flex: 1;
+    min-height: 320px;
+    max-height: calc(92vh - 58px);
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.lightbox-image,
+.lightbox-video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.lightbox-arrow {
+    width: 42px;
+    height: 42px;
+    font-size: 24px;
+}
+
+@media (max-width: 540px) {
+    .post-card-body {
+        padding: 12px;
+    }
+
+    .post-card-title {
+        font-size: 16px;
+    }
+
+    .post-media-preview {
+        height: 250px;
+    }
+
+    .media-lightbox-backdrop {
+        padding: 10px;
+    }
+}
