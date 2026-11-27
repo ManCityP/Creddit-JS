@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:5000';
+export const SERVER_URL = 'http://localhost:5000';
 
 // Retrieve the saved token.
 export const getToken = () => {
@@ -96,6 +96,8 @@ export const registerUser = async (username, email, password) => {
 };
 
 
+/* region Posts API */
+
 // Create Post API
 export const createPost = async (formData) => {
     const token = getToken();
@@ -111,7 +113,29 @@ export const createPost = async (formData) => {
     return checkResponse(response);
 };
 
+export const fetchLatestPosts = async (limit = 10) => {
+    const response = await fetch(`${SERVER_URL}/api/post/latest?limit=${limit}`, {
+        headers: {
+            ...authHeaders(),
+        },
+    });
+    const data = await checkResponse(response);
+    return Array.isArray(data) ? data : data?.posts || [];
+};
 
+export const votePost = async (postId, value) => {
+    const response = await fetch(`${SERVER_URL}/api/post/${postId}/vote`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...authHeaders(),
+        },
+        body: JSON.stringify({ value }),
+    });
+    return checkResponse(response);
+};
+
+/* endregion */
 
 // The login token saved by Login.jsx
 export const isLoggedIn = () => Boolean(localStorage.getItem('token'));

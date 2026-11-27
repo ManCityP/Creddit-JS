@@ -1,156 +1,83 @@
-
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { fetchLatestPosts } from "../api/api";
+import PostCard from "../components/PostCard";
 import "./Home.css";
 
 function Home() {
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        let active = true;
+
+        async function loadLatestPosts() {
+            //TODO: Load more posts when scrolling down, and actually load with different filters (This is just a test)
+            try {
+                setLoading(true);
+                setError("");
+                const list = await fetchLatestPosts(10);
+                if (active) {
+                    setPosts(list.slice(0, 10));
+                }
+            } catch (err) {
+                if (active) {
+                    setError(err.message || "Failed to load posts.");
+                }
+            } finally {
+                if (active) {
+                    setLoading(false);
+                }
+            }
+        }
+
+        loadLatestPosts();
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    function handleCommunityChange(communityName, { isMember }) {
+        setPosts((prev) =>
+            prev.map((post) => {
+                const name = typeof post.community === "object" ? post.community?.name : post.communityName;
+                if (name !== communityName) return post;
+
+                return {
+                    ...post,
+                    isMember,
+                    community: typeof post.community === "object" && post.community ? { ...post.community, isMember } : post.community
+                };
+            })
+        );
+    }
+
     return (
-        <div className="home-page">
+        <main className="home-page">
+            <div className="home-header">
+                <h1>Latest Posts</h1>
+            </div>
 
-            {/* Hero Section */}
-            <section className="hero-section">
+            {loading && <p className="home-status">Loading latest posts...</p>}
+            {error && <div className="home-error">{error}</div>}
 
-                <div className="hero-content">
-                    <span className="hero-tag">
-                        WELCOME TO CREDDIT
-                    </span>
+            {!loading && !error && posts.length === 0 && (
+                <p className="home-status">No posts yet. Create the first one!</p>
+            )}
 
-                    <h1>
-                        Find your people.
-                        <br />
-                        <span>Share your world.</span>
-                    </h1>
-
-                    <p>
-                        Discover communities, share your interests,
-                        and join conversations with people who
-                        understand what you love.
-                    </p>
-
-                    <div className="hero-buttons">
-                        <Link to="/register" className="get-started-btn">
-                            Get Started
-                        </Link>
-
-                        <Link to="/login" className="explore-btn">
-                            I already have an account
-                        </Link>
-                    </div>
+            {!loading && !error && posts.length > 0 && (
+                <div className="posts-feed">
+                    {posts.map((post) => (
+                        <PostCard
+                            key={post._id}
+                            post={post}
+                            onCommunityChange={handleCommunityChange}
+                        />
+                    ))}
                 </div>
-
-                {/* Decorative Visual */}
-                <div className="hero-visual">
-
-                    <div className="visual-circle">
-                        <img src="/frisset.jpg" alt="Creddit logo" />
-                    </div>
-
-                    <div className="floating-card card-one">
-                        <span>💻</span>
-                        <div>
-                            <strong>Technology</strong>
-                            <small>Explore what's new</small>
-                        </div>
-                    </div>
-
-                    <div className="floating-card card-two">
-                        <span>🎮</span>
-                        <div>
-                            <strong>Gaming</strong>
-                            <small>Play. Discuss. Connect.</small>
-                        </div>
-                    </div>
-
-                    <div className="floating-card card-three">
-                        <span>🚀</span>
-                        <div>
-                            <strong>Discover</strong>
-                            <small>Something interesting</small>
-                        </div>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {/* Communities Section */}
-            <section className="communities-section">
-
-                <div className="section-heading">
-                    <span>EXPLORE YOUR INTERESTS</span>
-
-                    <h2>
-                        There's a community for everyone.
-                    </h2>
-
-                    <p>
-                        Whatever you're passionate about,
-                        there's a place for you on Creddit.
-                    </p>
-                </div>
-
-
-                <div className="community-grid">
-
-                    <div className="community-card">
-                        <span className="community-icon">💻</span>
-                        <h3>Technology</h3>
-                        <p>
-                            Discuss programming, AI, gadgets,
-                            and the latest innovations.
-                        </p>
-                    </div>
-
-                    <div className="community-card">
-                        <span className="community-icon">🎮</span>
-                        <h3>Gaming</h3>
-                        <p>
-                            Share your favorite games,
-                            experiences, and gaming news.
-                        </p>
-                    </div>
-
-                    <div className="community-card">
-                        <span className="community-icon">⚽</span>
-                        <h3>Sports</h3>
-                        <p>
-                            Talk about your favorite teams,
-                            players, and competitions.
-                        </p>
-                    </div>
-
-                    <div className="community-card">
-                        <span className="community-icon">🎬</span>
-                        <h3>Entertainment</h3>
-                        <p>
-                            Discover movies, series,
-                            music, and more.
-                        </p>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            {/* Join Section */}
-            <section className="join-section">
-
-                <h2>
-                    Your community is waiting.
-                </h2>
-
-                <p>
-                    Join Creddit and become part of the conversation.
-                </p>
-
-                <Link to="/register" className="get-started-btn">
-                    Join Creddit
-                </Link>
-
-            </section>
-
-        </div>
+            )}
+        </main>
     );
 }
 
