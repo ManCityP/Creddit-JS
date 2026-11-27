@@ -5,20 +5,18 @@ import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
 import communityRoutes from "./routes/communityRoutes.js";
+import postRoutes from "./routes/postRoutes.js";
 
-import path from "path";
-import { fileURLToPath } from "url";
 import Auth from "./helpers/Auth.js";
-import Upload from "./helpers/upload.js";
-import Post from "./models/Post.js";
 import Session from "./models/Session.js";
 import jwt from "jsonwebtoken";
 
-
-dotenv.config();
-
+import {fileURLToPath} from "url";
+import path from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -28,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/communities", communityRoutes);
+app.use("/api/post", postRoutes);
 
 app.use((err, _req, res, next) => {
     if (err && err.name === "MulterError") {
@@ -38,17 +37,6 @@ app.use((err, _req, res, next) => {
     }
     next(err);
 });
-
-function resolveMediaType(mimeType = "") {
-    if (mimeType.startsWith("image/")) return "image";
-    if (mimeType.startsWith("video/")) return "video";
-    if (mimeType.startsWith("audio/")) return "audio";
-    if (mimeType.startsWith("application/") || mimeType.startsWith("text/")) {
-        return "file";
-    }
-    return "other";
-}
-
 
 app.get("/", (req, res) => {
     res.send("Creddit Backend is running");
@@ -206,9 +194,6 @@ app.post("/api/auth/register", async (req, res) => {
     }
 });
 
-
-
-
 app.post("/api/auth/logout", Auth, async (req, res) => {
     try {
         await Session.findByIdAndDelete(req.sessionId);
@@ -227,50 +212,6 @@ app.post("/api/auth/logout", Auth, async (req, res) => {
         });
     }
 });
-
-
-
-app.post("/api/post/create", Auth, Upload.array("media", 20), async (req, res) => {
-    try {
-        const { title, content, community } = req.body;
-
-        if (!title || !title.trim()) {
-            return res.status(400).json({ message: "Title is required" });
-        }
-
-        const media = (req.files || []).map((file) => ({
-            url: `/uploads/${file.filename}`,
-            type: resolveMediaType(file.mimetype),
-            mimeType: file.mimetype
-        }));
-
-        const post = new Post({
-            title: title.trim(),
-            content: content ? content.trim() : "",
-            author: req.userId,
-            community: community || null,
-            media
-        });
-
-        await post.save();
-        await post.populate("author", "username");
-        if (post.community) {
-            await post.populate("community", "name");
-        }
-
-        return res.status(201).json({
-            message: "Post created successfully",
-            post,
-        });
-    } catch (err) {
-        if (err.name === "ValidationError" || err.name === "CastError") {
-            return res.status(400).json({ message: err.message });
-        }
-        return res
-            .status(500)
-            .json({ message: "Failed to create post", error: err.message });
-    }
-})
 
 await connectDB();
 const PORT = process.env.PORT || 5000;
