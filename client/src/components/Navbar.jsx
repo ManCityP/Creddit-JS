@@ -13,6 +13,10 @@ function Navbar(){
                     Create Post
                 </Link>
 
+                <Link to="/comments-test" className="login-btn">
+                    Test Comments
+                </Link>
+
                 <Link to="/login" className="login-btn">
                     Log in
                 </Link>
