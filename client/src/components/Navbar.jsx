@@ -11,6 +11,7 @@ function Navbar() {
 
     // Update the navbar when navigating, including after login.
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setUser(getStoredUser());
     }, [location.pathname]);
 
@@ -42,6 +43,11 @@ function Navbar() {
                     <>
                         <Link to="/CreatePost" className="signup-btn">
                             Create Post
+                        </Link>
+
+                        <Link to="/create-community" className="create-btn">
+                            <span className="create-btn-plus">+</span>
+                            <span className="create-btn-text">Create community</span>
                         </Link>
 
                         <div className="user-menu">
@@ -77,11 +83,6 @@ function Navbar() {
                     <>
                         <Link to="/login" className="login-btn">
                             Log in
-                        </Link>
-
-                        <Link to="/create-community" className="create-btn">
-                            <span className="create-btn-plus">+</span>
-                            <span className="create-btn-text">Create community</span>
                         </Link>
 
                         <Link to="/register" className="signup-btn">
