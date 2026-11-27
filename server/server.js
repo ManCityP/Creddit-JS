@@ -4,13 +4,15 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import communityRoutes from "./routes/communityRoutes.js";
+
 import path from "path";
 import { fileURLToPath } from "url";
 import Auth from "./helpers/Auth.js";
 import Upload from "./helpers/upload.js";
 import Post from "./models/Post.js";
+import Session from "./models/Session.js";
+import jwt from "jsonwebtoken";
 
 
 dotenv.config();
@@ -25,6 +27,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.use("/api/communities", communityRoutes);
+
+app.use((err, _req, res, next) => {
+    if (err && err.name === "MulterError") {
+        return res.status(400).json({ message: err.message });
+    }
+    if (err && err.message === "Unsupported file type") {
+        return res.status(400).json({ message: err.message });
+    }
+    next(err);
+});
 
 function resolveMediaType(mimeType = "") {
     if (mimeType.startsWith("image/")) return "image";
@@ -48,38 +61,10 @@ app.get("/api/test", (req, res) => {
     });
 });
 
-app.get("/api/test/create-user", async (req, res) => {
-    try {
-        const user = await User.create({
-            username: "FuckingMohamedAshraf",
-            email: "FuckingMohamedAshraf@gmail.com",
-            passwordHash: await bcrypt.hash("FuckingMohamedAshraf", 233),
-            bio: "This is a test account"
-        });
-
-        res.status(201).json({
-            success: true,
-            message: "User created successfully",
-            userId: user._id
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-app.use("/api/communities", communityRoutes);
-
-
-
 app.post("/api/auth/login", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Check that all fields are provided(no need for it as it was handled in frontend "login.jsx")
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -87,12 +72,10 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // Find the user using their email
         const user = await User.findOne({
             email: email.trim().toLowerCase()
         }).select("+passwordHash");
 
-        // Check if that user email even exists or not
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -100,13 +83,11 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // if email found Compare the entered password with the stored hash
         const isPasswordCorrect = await bcrypt.compare(
             password,
             user.passwordHash
         );
 
-        // Check if the password is incorrect
         if (!isPasswordCorrect) {
             return res.status(401).json({
                 success: false,
@@ -114,18 +95,90 @@ app.post("/api/auth/login", async (req, res) => {
             });
         }
 
-        // Login token: the browser sends it back with every request,  so the server knows who is logged in (see middleware/auth.js)
+        // Create a new session with a 60-minute inactivity timeout.
+        const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+        const session = await Session.create({
+            userId: user._id,
+            lastActivityAt: new Date(),
+            expiresAt
+        });
+
+        // Generate a token linked to this specific session.
         const token = jwt.sign(
-            { id: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
+            {
+                userId: user._id.toString(),
+                sessionId: session._id.toString()
+            },
+            process.env.JWT_SECRET
         );
 
-        // if password is correct then Login successful
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "Login successful",
             token,
+            user: {
+               id: user._id,
+                username: user.username,
+                email: user.email,
+                avatar: user.avatar,
+            }
+        });
+
+    } catch (error) {
+        console.error("Login error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Server error during login"
+        });
+    }
+});
+
+
+
+app.post("/api/auth/register", async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
+
+        const cleanUsername = username.trim();
+        const cleanEmail = email.trim().toLowerCase();
+
+        // Check if username or email already exists
+        const existingUser = await User.findOne({
+            $or: [
+                { username: cleanUsername },
+                { email: cleanEmail }
+            ]
+        });
+
+        if (existingUser) {
+            if (existingUser.username === cleanUsername) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Username already exists"
+                });
+            }
+
+            return res.status(409).json({
+                success: false,
+                message: "Email already exists"
+            });
+        }
+
+        // Hash the password
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        // Create the new user
+        const user = await User.create({
+            username: cleanUsername,
+            email: cleanEmail,
+            passwordHash
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Registration successful",
             user: {
                 id: user._id,
                 username: user.username,
@@ -133,15 +186,48 @@ app.post("/api/auth/login", async (req, res) => {
             }
         });
 
-    } catch (error) { // catch if the server itself fails or raise an error when trying to login
-        console.error("Login error:", error);
+    } catch (error) {
+        console.error("Registration error:", error);
 
-        res.status(500).json({
+        // Handle duplicate entries
+        if (error.code === 11000) {
+            const field = Object.keys(error.keyPattern)[0];
+
+            return res.status(409).json({
+                success: false,
+                message: `${field} already exists`
+            });
+        }
+
+        return res.status(500).json({
             success: false,
-            message: "Server error during login"
+            message: "Server error during registration"
         });
     }
 });
+
+
+
+
+app.post("/api/auth/logout", Auth, async (req, res) => {
+    try {
+        await Session.findByIdAndDelete(req.sessionId);
+
+        return res.status(200).json({
+            success: true,
+            message: "Logout successful"
+        });
+
+    } catch (error) {
+        console.error("Logout error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Server error during logout"
+        });
+    }
+});
+
 
 
 app.post("/api/post/create", Auth, Upload.array("media", 20), async (req, res) => {
@@ -185,17 +271,6 @@ app.post("/api/post/create", Auth, Upload.array("media", 20), async (req, res) =
             .json({ message: "Failed to create post", error: err.message });
     }
 })
-
-app.use((err, _req, res, next) => {
-    if (err && err.name === "MulterError") {
-        return res.status(400).json({ message: err.message });
-    }
-    if (err && err.message === "Unsupported file type") {
-        return res.status(400).json({ message: err.message });
-    }
-    next(err);
-});
-
 
 await connectDB();
 const PORT = process.env.PORT || 5000;
